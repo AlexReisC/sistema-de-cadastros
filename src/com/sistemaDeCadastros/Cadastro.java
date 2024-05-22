@@ -1,6 +1,8 @@
 package com.sistemaDeCadastros;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,19 +14,10 @@ import java.nio.file.Files;
 
 public class Cadastro {
     private static List<String> perguntas = new ArrayList<>();
+    private static int quantidadeUsuarios = 0;
 
-    public static Path criarFormulario(String path){
-        Path formularioPath = Paths.get(path);
-        try {
-            Files.createFile(formularioPath);
-        } catch (IOException e) {
-            System.out.println("Arquivo já existe");
-        }
-        
-        return formularioPath;
-    }
-
-    public static void cadastrarUsuario(Usuario usuario, Path formularioPath){
+    public static void cadastrarUsuario(Usuario usuario){
+        Path formularioPath = Paths.get("C:\\Estudos e Projetos\\Projetos\\Sistema de Cadastros\\src\\com\\sistemaDeCadastros\\formulario.txt");
         Scanner scan = new Scanner(System.in);
 
         try (BufferedReader bufferedReader = Files.newBufferedReader(formularioPath)) {
@@ -53,17 +46,45 @@ public class Cadastro {
             scan.nextLine();
             usuario.setAltura(scan.nextDouble());
         }
-        
-        scan.close();
+
+        quantidadeUsuarios++;
         System.out.println("\n" + usuario.toString());
     }
 
-    public static void main(String[] args) {
-        Path form = criarFormulario("C:\\Estudos e Projetos\\Projetos\\Sistema de Cadastros\\src\\com\\sistemaDeCadastros\\formulario.txt");
-
-        Usuario pessoa1 = new Usuario();
-        cadastrarUsuario(pessoa1, form);
-
+    public static void criarArquivo(Usuario usuario){
+        String path = "C:\\Estudos e Projetos\\Projetos\\Sistema de Cadastros\\src\\com\\sistemaDeCadastros\\";
+        String nomeDoArquivo = usuario.getNome().toUpperCase().replace(" ", "");
+        nomeDoArquivo = quantidadeUsuarios + "-" + nomeDoArquivo + ".txt";
+        path = path + nomeDoArquivo;
         
+        Path arquivoPath = Paths.get(path);
+        
+        try {
+            Files.createFile(arquivoPath);
+        } catch (IOException e) {
+            System.out.println("O arquivo deste usuário já existe");
+        }
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path))) {
+            bw.write(usuario.getNome());
+            bw.newLine();
+            bw.write(usuario.getEmail());
+            bw.newLine();
+            bw.write(String.format("%d", usuario.getIdade()));
+            bw.newLine();
+            bw.write(String.format("%.2f", usuario.getAltura()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        Usuario pessoa1 = new Usuario();
+        cadastrarUsuario(pessoa1);
+        criarArquivo(pessoa1);
+        
+        Usuario pessoa2 = new Usuario();
+        cadastrarUsuario(pessoa2);
+        criarArquivo(pessoa2);
     }
 }
