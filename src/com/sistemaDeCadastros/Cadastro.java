@@ -18,33 +18,33 @@ public class Cadastro {
 
     public static void cadastrarUsuario(Usuario usuario){
         Path formularioPath = Paths.get("C:\\Estudos e Projetos\\Projetos\\Sistema de Cadastros\\src\\com\\sistemaDeCadastros\\formulario.txt");
-        Scanner scan = new Scanner(System.in);
-
-        try (BufferedReader bufferedReader = Files.newBufferedReader(formularioPath)) {
-            String linha;
-            while ((linha = bufferedReader.readLine()) != null) {
-                perguntas.add(linha);
+        try (Scanner scan = new Scanner(System.in)) {
+            try (BufferedReader bufferedReader = Files.newBufferedReader(formularioPath)) {
+                String linha;
+                while ((linha = bufferedReader.readLine()) != null) {
+                    perguntas.add(linha);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        System.out.println(perguntas.get(0));
-        usuario.setNome(scan.nextLine());
-        
-        System.out.println(perguntas.get(1));
-        usuario.setEmail(scan.nextLine());
-        
-        System.out.println(perguntas.get(2));
-        usuario.setIdade(scan.nextInt());
-        
-        System.out.println(perguntas.get(3));
-        try {
-            usuario.setAltura(scan.nextDouble());
-        } catch (InputMismatchException e) {
-            System.out.println("Use virgula ao invés de ponto:");
-            scan.nextLine();
-            usuario.setAltura(scan.nextDouble());
+            System.out.println(perguntas.get(0));
+            usuario.setNome(scan.nextLine());
+            
+            System.out.println(perguntas.get(1));
+            usuario.setEmail(scan.nextLine());
+            
+            System.out.println(perguntas.get(2));
+            usuario.setIdade(scan.nextInt());
+            
+            System.out.println(perguntas.get(3));
+            try {
+                usuario.setAltura(scan.nextDouble());
+            } catch (InputMismatchException e) {
+                System.out.println("Use virgula ao invés de ponto:");
+                scan.nextLine();
+                usuario.setAltura(scan.nextDouble());
+            }
         }
 
         quantidadeUsuarios++;
