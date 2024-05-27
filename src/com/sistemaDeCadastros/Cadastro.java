@@ -30,25 +30,6 @@ public class Cadastro {
     private static List<String> perguntas = new ArrayList<>();
     public static List<String> usuariosCadastrados = new ArrayList<>();
 
-    public static void criarFormulario(){
-        Path formularioPath = Paths.get("C:\\Estudos e Projetos\\Projetos\\Sistema de Cadastros\\src\\com\\sistemaDeCadastros\\formulario.txt");
-        try {
-            Files.createFile(formularioPath);
-        } catch (IOException e) {
-            System.out.println("Formulario já foi criado!");
-        }
-
-        try (BufferedWriter bw = Files.newBufferedWriter(formularioPath)) {
-            for (String string : perguntas) {
-                bw.write(string);
-                bw.newLine();
-            }
-            bw.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static void criarArquivo(List<String> respotas) {
         Path path = Paths.get("C:\\Estudos e Projetos\\Projetos\\Sistema de Cadastros\\src\\com\\sistemaDeCadastros\\");
         try {
@@ -103,7 +84,7 @@ public class Cadastro {
 
         Path pasta = Paths.get("C:\\Estudos e Projetos\\Projetos\\Sistema de Cadastros\\src\\com\\sistemaDeCadastros");
         try {
-            Files.walkFileTree(pasta, new listaArquivos());
+            Files.walkFileTree(pasta, new ListaArquivos());
             for (int index = 0; index < usuariosCadastrados.size(); index++) {
                 String arquivo = usuariosCadastrados.get(index);
                 Path arquivoPath = Paths.get(arquivo);
@@ -125,7 +106,7 @@ public class Cadastro {
         Path pasta = Paths.get("C:\\Estudos e Projetos\\Projetos\\Sistema de Cadastros\\src\\com\\sistemaDeCadastros");
         Path arquivoPath;
         try {
-            Files.walkFileTree(pasta, new listaArquivos());
+            Files.walkFileTree(pasta, new ListaArquivos());
             for (int index = 0; index < usuariosCadastrados.size(); index++) {
                 String arquivo = usuariosCadastrados.get(index);
                 arquivoPath = Paths.get(arquivo);
@@ -143,6 +124,7 @@ public class Cadastro {
     }
 
     public static void cadastrarPergunta(){
+        lerFormulario();
         try (Scanner scan = new Scanner(System.in)) {
             String novaPergunta;
             String prefixo = (perguntas.size() + 1) + " - ";
@@ -150,30 +132,32 @@ public class Cadastro {
             do {
                 System.out.println("Digite a nova pergunta");
                 novaPergunta = scan.nextLine();
-                novaPergunta = prefixo + novaPergunta;
-                
                 if (perguntas.contains(novaPergunta)) {
                     System.out.println("Essa pergunta já existe!");
                 }
             } while (perguntas.contains(novaPergunta));
 
-            Path formularioParh = Paths.get(
+            novaPergunta = prefixo + novaPergunta;
+            perguntas.add(novaPergunta);
+            
+            Path formularioPath = Paths.get(
                 "C:\\Estudos e Projetos\\Projetos\\Sistema de Cadastros\\src\\com\\sistemaDeCadastros\\formulario.txt");
-            try (BufferedWriter bw = Files.newBufferedWriter(formularioParh)) {
+                try (BufferedWriter bw = Files.newBufferedWriter(formularioPath)) {
+                for (int i = 0; i < perguntas.size(); i++) {
+                    bw.write(perguntas.get(i));
                 bw.newLine();
-                bw.write(novaPergunta);
+                }
                 bw.flush();
             } catch (IOException e) {
                 System.out.println("Não foi possível adicionar a pergunta.");
                 e.printStackTrace();
             }
-            
-            perguntas.add(novaPergunta);
         }
     }
     
     public static boolean deletarPergunta(){
-        if(perguntas.size() <= 4){
+        lerFormulario();
+        if(perguntas.size() == 4){
             System.out.println("Há apenas 4 perguntas no formulário, não é possível remover nenhuma delas!");
             return false;
         }
@@ -188,25 +172,31 @@ public class Cadastro {
                 }
             } while (indice <= 4 && indice > perguntas.size());
             
-            perguntas.remove(indice+1);
-            Path formularioParh = Paths.get(
-                "C:\\Estudos e Projetos\\Projetos\\Sistema de Cadastros\\src\\com\\sistemaDeCadastros\\formulario.txt");
-            try {
-                Files.delete(formularioParh);
-            } catch (IOException e) {
-                System.out.println("Não foi possível deletar o arquivo");
-                e.printStackTrace();
-            }
-
-            if(perguntas.size() > 5){
-                int tam = perguntas.size();
-                for (int index = indice+1; index < tam; index++) {
+            perguntas.remove(indice-1);
+            
+            int tam = perguntas.size();
+            if(tam >= indice){
+                for (int index = indice-1; index < tam; index++) {
                     String string = perguntas.get(index);
-                    string.replace(index + " - ", index-1 + " - ");
+                    String numeracaoAntiga = (index+2) + " - ";
+                    String numeracaoAtual = (index+1) + " - ";
+                    string = string.replace(numeracaoAntiga, numeracaoAtual);
+                    perguntas.set(index, string);
                 }
             }
+
+            Path formularioPath = Paths.get(
+                "C:\\Estudos e Projetos\\Projetos\\Sistema de Cadastros\\src\\com\\sistemaDeCadastros\\formulario.txt");
             
-            criarFormulario();
+            try (BufferedWriter bw = Files.newBufferedWriter(formularioPath)) {
+                for (String string : perguntas) {
+                    bw.write(string);
+                    bw.newLine();
+                }
+                bw.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return true;
     }
@@ -244,6 +234,19 @@ public class Cadastro {
                     System.out.println("Opção inválida");
                     break;
             }
+        }
+    }
+
+    public static void lerFormulario(){
+        Path formularioPath = Paths.get("C:\\Estudos e Projetos\\Projetos\\Sistema de Cadastros\\src\\com\\sistemaDeCadastros\\formulario.txt");
+        try (BufferedReader reader = Files.newBufferedReader(formularioPath)) {
+            String linha;
+            while((linha = reader.readLine()) != null){
+                perguntas.add(linha);
+            }
+        } catch (IOException e) {
+            System.out.println("Não foi possivel ler o arquivo.");
+            e.printStackTrace();
         }
     }
 
