@@ -138,7 +138,26 @@ public class Cadastro {
     }
 
     public static void pesquisarNome(String nome){
-        usuariosCadastrados.stream().filter(u -> u.getNome().contains(nome)).forEach(u -> System.out.println(u.getNome()));
+        System.out.println();
+
+        Path pasta = Paths.get("C:\\Estudos e Projetos\\Projetos\\Sistema de Cadastros\\src\\com\\sistemaDeCadastros");
+        Path arquivoPath;
+        try {
+            Files.walkFileTree(pasta, new listaArquivos());
+            for (int index = 0; index < usuariosCadastrados.size(); index++) {
+                String arquivo = usuariosCadastrados.get(index);
+                arquivoPath = Paths.get(arquivo);
+                
+                try (BufferedReader reader = Files.newBufferedReader(arquivoPath)) {
+                    String texto = reader.readLine().toString();
+                    if(texto.contains(nome)){
+                        System.out.println(texto);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void cadastrarPergunta(){
@@ -219,6 +238,7 @@ public class Cadastro {
                 "4 - Deletar pergunta do formulário\r\n" +
                 "5 - Pesquisar usuário por nome");
             int opcao = scan.nextInt();
+            scan.nextLine();
 
             switch (opcao) {
                 case 1:
@@ -235,9 +255,11 @@ public class Cadastro {
                     break;
                 case 5:
                     System.out.println("Digite o nome do usuario:");
-                    pesquisarNome(scan.nextLine());
+                    String nome = scan.nextLine();
+                    pesquisarNome(nome);
                     break;
                 default:
+                    System.out.println("Opção inválida");
                     break;
             }
         }
