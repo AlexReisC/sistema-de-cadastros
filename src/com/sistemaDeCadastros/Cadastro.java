@@ -68,28 +68,20 @@ public class Cadastro {
         System.out.println("\n" + usuario.toString());
     }
 
-    public static void criarArquivo(Usuario usuario){
-        String path = "C:\\Estudos e Projetos\\Projetos\\Sistema de Cadastros\\src\\com\\sistemaDeCadastros\\";
-        String nomeDoArquivo = usuario.getNome().toUpperCase().replace(" ", "");
-        nomeDoArquivo = quantidadeUsuarios + "-" + nomeDoArquivo + ".txt";
-        path = path + nomeDoArquivo;
-        
-        Path arquivoPath = Paths.get(path);
-        
-        try {
-            Files.createFile(arquivoPath);
-        } catch (IOException e) {
-            System.out.println("O arquivo deste usuário já existe");
-        }
+    public static void listarUsuarios(){
+        System.out.println("--------------");
 
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path))) {
-            bw.write(usuario.getNome());
-            bw.newLine();
-            bw.write(usuario.getEmail());
-            bw.newLine();
-            bw.write(String.format("%d", usuario.getIdade()));
-            bw.newLine();
-            bw.write(String.format("%.2f", usuario.getAltura()));
+        Path pasta = Paths.get("C:\\Estudos e Projetos\\Projetos\\Sistema de Cadastros\\src\\com\\sistemaDeCadastros");
+        try {
+            Files.walkFileTree(pasta, new listaArquivos());
+            for (int index = 0; index < usuariosList.size(); index++) {
+                String arquivo = usuariosList.get(index);
+                Path arquivoPath = Paths.get(arquivo);
+                
+                try (BufferedReader reader = Files.newBufferedReader(arquivoPath)) {
+                    System.out.println(reader.readLine().toString());
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
