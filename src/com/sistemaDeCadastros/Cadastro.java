@@ -85,6 +85,114 @@ public class Cadastro {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        System.out.println("--------------\r\n");
+    }
+
+    public static void pesquisarNome(String nome){
+        usuariosCadastrados.stream().filter(u -> u.getNome().contains(nome)).forEach(u -> System.out.println(u.getNome()));
+    }
+
+    public static void cadastrarPergunta(){
+        try (Scanner scan = new Scanner(System.in)) {
+            String novaPergunta;
+            String prefixo = (perguntas.size() + 1) + " - ";
+
+            do {
+                System.out.println("Digite a nova pergunta");
+                novaPergunta = scan.nextLine();
+                novaPergunta = prefixo + novaPergunta;
+                
+                if (perguntas.contains(novaPergunta)) {
+                    System.out.println("Essa pergunta já existe!");
+                }
+            } while (perguntas.contains(novaPergunta));
+
+            Path formularioParh = Paths.get(
+                "C:\\Estudos e Projetos\\Projetos\\Sistema de Cadastros\\src\\com\\sistemaDeCadastros\\formulario.txt");
+            try (BufferedWriter bw = Files.newBufferedWriter(formularioParh)) {
+                bw.newLine();
+                bw.write(novaPergunta);
+                bw.flush();
+            } catch (IOException e) {
+                System.out.println("Não foi possível adicionar a pergunta.");
+                e.printStackTrace();
+            }
+            
+            perguntas.add(novaPergunta);
+        }
+    }
+    
+    public static boolean deletarPergunta(){
+        if(perguntas.size() <= 4){
+            System.out.println("Há apenas 4 perguntas no formulário, não é possível remover nenhuma delas!");
+            return false;
+        }
+
+        try (Scanner scan = new Scanner(System.in)) {
+            int indice;
+            do {
+                System.out.println("Digite a numeração da pergunta a ser deletada (exceto 1 a 4):");
+                indice = scan.nextInt();
+                if(indice <= 4 || indice > perguntas.size()){
+                    System.out.println("Número inválido!");
+                }
+            } while (indice <= 4 && indice > perguntas.size());
+            
+            perguntas.remove(indice+1);
+            Path formularioParh = Paths.get(
+                "C:\\Estudos e Projetos\\Projetos\\Sistema de Cadastros\\src\\com\\sistemaDeCadastros\\formulario.txt");
+            try {
+                Files.delete(formularioParh);
+            } catch (IOException e) {
+                System.out.println("Não foi possível deletar o arquivo");
+                e.printStackTrace();
+            }
+
+            if(perguntas.size() > 5){
+                int tam = perguntas.size();
+                for (int index = indice+1; index < tam; index++) {
+                    String string = perguntas.get(index);
+                    string.replace(index + " - ", index-1 + " - ");
+                }
+            }
+            
+            criarFormulario();
+        }
+        return true;
+    }
+    
+    public static void exibirMenu() {
+        try (Scanner scan = new Scanner(System.in)) {
+            System.out.println("Escolha uma opção...\r\n" +
+                "1 - Cadastrar o usuário\r\n" +
+                "2 - Listar todos usuários cadastrados\r\n" +
+                "3 - Cadastrar nova pergunta no formulário\r\n" +
+                "4 - Deletar pergunta do formulário\r\n" +
+                "5 - Pesquisar usuário por nome");
+            int opcao = scan.nextInt();
+
+            switch (opcao) {
+                case 1:
+                    cadastrarUsuario();
+                    break;
+                case 2:
+                    listarUsuarios();
+                    break;
+                case 3:
+                    cadastrarPergunta();
+                    break;
+                case 4:
+                    deletarPergunta();
+                    break;
+                case 5:
+                    System.out.println("Digite o nome do usuario:");
+                    pesquisarNome(scan.nextLine());
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     public static void main(String[] args) {
