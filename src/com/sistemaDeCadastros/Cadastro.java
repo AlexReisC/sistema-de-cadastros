@@ -21,7 +21,7 @@ class listaArquivos extends SimpleFileVisitor<Path>{
     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
         String arquivo = file.toAbsolutePath().toString();
         if(arquivo.endsWith(".txt") && !(arquivo.contains("formulario.txt"))){
-            Cadastro.usuariosList.add(arquivo);
+            Cadastro.usuariosCadastrados.add(arquivo);
         }
         return FileVisitResult.CONTINUE;
     }
@@ -30,8 +30,7 @@ class listaArquivos extends SimpleFileVisitor<Path>{
 
 public class Cadastro {
     private static List<String> perguntas = new ArrayList<>();
-    private static List<Usuario> usuariosCadastrados = new ArrayList<>();
-    public static List<String> usuariosList = new ArrayList<>();
+    public static List<String> usuariosCadastrados = new ArrayList<>();
 
     public static void criarFormulario(){
         Path formularioPath = Paths.get("C:\\Estudos e Projetos\\Projetos\\Sistema de Cadastros\\src\\com\\sistemaDeCadastros\\formulario.txt");
@@ -123,8 +122,8 @@ public class Cadastro {
         Path pasta = Paths.get("C:\\Estudos e Projetos\\Projetos\\Sistema de Cadastros\\src\\com\\sistemaDeCadastros");
         try {
             Files.walkFileTree(pasta, new listaArquivos());
-            for (int index = 0; index < usuariosList.size(); index++) {
-                String arquivo = usuariosList.get(index);
+            for (int index = 0; index < usuariosCadastrados.size(); index++) {
+                String arquivo = usuariosCadastrados.get(index);
                 Path arquivoPath = Paths.get(arquivo);
                 
                 try (BufferedReader reader = Files.newBufferedReader(arquivoPath)) {
