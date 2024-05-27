@@ -33,8 +33,57 @@ public class Cadastro {
     private static List<Usuario> usuariosCadastrados = new ArrayList<>();
     public static List<String> usuariosList = new ArrayList<>();
 
-    public static void cadastrarUsuario(Usuario usuario){
+    public static void criarFormulario(){
         Path formularioPath = Paths.get("C:\\Estudos e Projetos\\Projetos\\Sistema de Cadastros\\src\\com\\sistemaDeCadastros\\formulario.txt");
+        try {
+            Files.createFile(formularioPath);
+        } catch (IOException e) {
+            System.out.println("Formulario já foi criado!");
+        }
+
+        try (BufferedWriter bw = Files.newBufferedWriter(formularioPath)) {
+            for (String string : perguntas) {
+                bw.write(string);
+                bw.newLine();
+            }
+            bw.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void criarArquivo(Usuario usuario) {
+        String path = "C:\\Estudos e Projetos\\Projetos\\Sistema de Cadastros\\src\\com\\sistemaDeCadastros\\";
+        String nomeDoArquivo = usuario.getNome().toUpperCase().replace(" ", "");
+        nomeDoArquivo = usuariosCadastrados.size() + "-" + nomeDoArquivo + ".txt";
+        path = path + nomeDoArquivo;
+
+        Path arquivoPath = Paths.get(path);
+
+        try {
+            Files.createFile(arquivoPath);
+        } catch (IOException e) {
+            System.out.println("O arquivo deste usuário já existe");
+        }
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path))) {
+            bw.write(usuario.getNome());
+            bw.newLine();
+            bw.write(usuario.getEmail());
+            bw.newLine();
+            bw.write(String.format("%d", usuario.getIdade()));
+            bw.newLine();
+            bw.write(String.format("%.2f", usuario.getAltura()));
+            bw.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void cadastrarUsuario() {
+        Usuario usuario = new Usuario();
+        Path formularioPath = Paths.get(
+                "C:\\Estudos e Projetos\\Projetos\\Sistema de Cadastros\\src\\com\\sistemaDeCadastros\\formulario.txt");
         try (Scanner scan = new Scanner(System.in)) {
             try (BufferedReader bufferedReader = Files.newBufferedReader(formularioPath)) {
                 String linha;
