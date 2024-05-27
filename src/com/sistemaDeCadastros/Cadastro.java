@@ -6,15 +6,32 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
+
+class listaArquivos extends SimpleFileVisitor<Path>{
+
+    @Override
+    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+        String arquivo = file.toAbsolutePath().toString();
+        if(arquivo.endsWith(".txt") && !(arquivo.contains("formulario.txt"))){
+            Cadastro.usuariosList.add(arquivo);
+        }
+        return FileVisitResult.CONTINUE;
+    }
+    
+}
 
 public class Cadastro {
     private static List<String> perguntas = new ArrayList<>();
-    private static int quantidadeUsuarios = 0;
+    private static List<Usuario> usuariosCadastrados = new ArrayList<>();
+    public static List<String> usuariosList = new ArrayList<>();
 
     public static void cadastrarUsuario(Usuario usuario){
         Path formularioPath = Paths.get("C:\\Estudos e Projetos\\Projetos\\Sistema de Cadastros\\src\\com\\sistemaDeCadastros\\formulario.txt");
