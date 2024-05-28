@@ -1,18 +1,18 @@
-## Getting Started
+## Sistema de Cadastros
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+Este projeto consiste de um sistema de cadastro simples, onde o usuário preenche um formulário através do terminal, com perguntas que estão gravadas em arquivo *txt*, e é cadastrado no sistema com um *txt* com suas informações.
 
-## Folder Structure
+## Como executar
+- Java na versão 8 ou superior (pois usa classes de tal versão)
+- Uma IDE ou um editor de texto (Vs Code por exemplo)
 
-The workspace contains two folders by default, where:
+### Funcionalidades
+- Cadastrar usuários: através do terminal são respondidas as perguntas no *formulario.txt*, tais respostas são armazenadas em outro *txt* com o nome do usuário.
+- Listar usuários: todos os usuários cadastrados são mostrados no temrinal.
+- Pesquisar usuários por nome: Digitando um nome ou parte de um são mostrados usuários cadastrados cujo nome correspondem com a pesquisa.
+- Cadastrar nova pergunta: É possível adicionar novas perguntas ao *formulario.txt*
+- Deletar pergunta: É possível deletar uma pergunta do formulário desde que esta não seja uma das 4 perguntas originais, pois não podem ser removidas.
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
-
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+## Próximos passos
+- Implementação de um banco de dados para substituir os arquivos *txt*
+- Interface
