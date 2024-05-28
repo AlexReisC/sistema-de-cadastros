@@ -136,7 +136,7 @@ public class Cadastro {
                     System.out.println("Essa pergunta já existe!");
                 }
             } while (perguntas.contains(novaPergunta));
-
+            
             novaPergunta = prefixo + novaPergunta;
             perguntas.add(novaPergunta);
             
@@ -145,7 +145,7 @@ public class Cadastro {
                 try (BufferedWriter bw = Files.newBufferedWriter(formularioPath)) {
                 for (int i = 0; i < perguntas.size(); i++) {
                     bw.write(perguntas.get(i));
-                bw.newLine();
+                    bw.newLine();
                 }
                 bw.flush();
             } catch (IOException e) {
@@ -251,12 +251,7 @@ public class Cadastro {
     }
 
     public static void main(String[] args) {
-        Usuario pessoa1 = new Usuario();
-        cadastrarUsuario(pessoa1);
-        criarArquivo(pessoa1);
-        
-        Usuario pessoa2 = new Usuario();
-        cadastrarUsuario(pessoa2);
-        criarArquivo(pessoa2);
+        exibirMenu();
+
     }
 }

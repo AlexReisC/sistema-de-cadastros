@@ -1,4 +1,5 @@
 1 - Qual seu nome completo?
 2 - Qual seu email de contato?
-3 - Qual sua idade?
-4 - Qual sua altura?
+3 - Qual sua altura?
+4 - Qual seu peso?
+5 - Quantas pessoas moram na sua casa?
